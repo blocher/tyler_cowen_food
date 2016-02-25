@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Laracasts\Generators\GeneratorsServiceProvider::class,
+        Stanley\Geocodio\ServiceProviders\LaravelServiceProvider::class,
 
     ],
 
@@ -203,6 +204,8 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+
+        'Geocodio' => Stanley\Geocodio\Geocodio::class,
 
     ],
 
