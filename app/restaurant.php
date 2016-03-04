@@ -18,7 +18,6 @@ class Restaurant extends Model
       return $this->belongsToMany('App\Term');
   }
 
-  //TODO: we need dependency injection to be able to swap out geocoders; also this code is a mess
   public function setRawAddressAttribute($raw_address)
   {
       $address_formatter = \App::make('AddressFormatter');
@@ -33,5 +32,7 @@ class Restaurant extends Model
       $this->attributes['longitude'] = $address_formatter->getLongitude();
 
   }
+
+  //TODO: Add scope to limit to actual restaurants
 
 }

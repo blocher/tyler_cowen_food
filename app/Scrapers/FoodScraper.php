@@ -128,9 +128,8 @@ class FoodScraper {
 			$restaurant->phone = $this->scrapePhone();
 			$restaurant->website = $this->scrapeWebsite();
 
-			//TOD: Attempt to extract website
 			//TODO: Attemp to extract reviews
-			//TODO: Geocode and clean up addresses
+			//TODO: Scrape Date Added
 
 			$restaurant->not_actual_restaurant = false;
 			if (empty($restaurant->raw_address)) {

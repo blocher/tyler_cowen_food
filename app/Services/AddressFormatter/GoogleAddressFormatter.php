@@ -9,7 +9,7 @@ class  GoogleAddressFormatter implements AddressFormatter
     private function findAddressComponent($name) {
 
         if (!$this->lookup || ! $this->lookup->address_components) {
-            return null;
+            return '';
         }
 
 
@@ -19,7 +19,7 @@ class  GoogleAddressFormatter implements AddressFormatter
             }
         }
 
-        return null;
+        return '';
     }
 
     public function init($address) {
@@ -32,7 +32,7 @@ class  GoogleAddressFormatter implements AddressFormatter
             );
             $response = \Geocoder::geocode('json', $param);
             $response = json_decode($response);
-            if (count($response->results)>0) {
+            if (count($response->results)>0 && $response->results[0]->formatted_address != "United States") {
                 $this->lookup = $response->results[0];
             }
         } catch (\Exception $e) {
