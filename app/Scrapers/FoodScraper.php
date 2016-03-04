@@ -24,6 +24,7 @@ class FoodScraper {
 				break;
 			}
 		}
+		return null;
 
 	}
 
@@ -39,9 +40,36 @@ class FoodScraper {
 
 	}
 
-	private function scrapePermalink() {
+	private function scrapePermalink($currentpage = null) {
 
-		return $this->dom->find('.entry-utility a[rel^=bookmark]',0)->href;
+		$url = $this->dom->find('.entry-utility a[rel^=bookmark]',0);
+		if (!empty($url)) {
+			return $url->href;
+		}
+		return $currentpage;
+
+	}
+
+	private function scrapePhone() {
+
+		$content = $this->dom->find('.entry-content',0)->plaintext;
+		$result = preg_match('/1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?/', $content, $matches);
+		if ($result and count($matches)>0) {
+			$phone = preg_replace("/[^0-9]/", "", $matches[0]);
+			return '(' . substr($phone,0,3) . ') ' . substr($phone,3,3) . '-' . substr($phone,6,4);
+		}
+
+		return '';
+	}
+
+	private function scrapeWebsite() {
+
+		foreach ($this->dom->find('.entry-content a') as $a) {
+			if ($a->innertext == 'web site' || $a->innertext == 'web site') {
+				return $a->href;
+			}
+		}
+		return null;
 
 	}
 
@@ -90,31 +118,33 @@ class FoodScraper {
 			$str = $this->scraper->get($nextlink);
 			$this->dom = HtmlDomParser::str_get_html( $str );
 
-			$permalink = $this->scrapePermalink();
+			$permalink = $this->scrapePermalink($nextlink);
 			$restaurant = \App\Restaurant::firstOrNew(['permalink' => $permalink]);
 
 			$restaurant->name = $this->scrapeName();
 			$restaurant->raw_address = $this->scrapeAddress();
 			$restaurant->description = $this->scrapeDescription();
 			$restaurant->description_plaintext = $this->scrapeDescriptionPlainText();
+			$restaurant->phone = $this->scrapePhone();
+			$restaurant->website = $this->scrapeWebsite();
 
 			//TOD: Attempt to extract website
 			//TODO: Attemp to extract reviews
 			//TODO: Geocode and clean up addresses
 
-			if (!empty($restaurant->raw_address)) {
-				$restaurant->save();
-				echo  PHP_EOL . 'SAVED: ' . $restaurant->name . PHP_EOL;
-				$this->scrapeCategories($restaurant);
-				$this->scrapeTags($restaurant);
-			} else {
-				//echo  PHP_EOL . 'NO ADDRESSS: ' . $restaurant->name . PHP_EOL;
+			$restaurant->not_actual_restaurant = false;
+			if (empty($restaurant->raw_address)) {
+				$restaurant->not_actual_restaurant = true;
 			}
+
+			$restaurant->save();
+			echo  PHP_EOL . 'SAVED: ' . $restaurant->name . PHP_EOL;
+			$this->scrapeCategories($restaurant);
+			$this->scrapeTags($restaurant);
 
 			$nextlink = $this->getNextLink();
 
 			$this->dom->clear();
-
 		} while ($nextlink);
 
 	}

@@ -24,7 +24,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-             "App\\Scrapers\\": "app/Scrapers/"
+             "App\\Scrapers\\": "app/Scrapers/",
+             "App\\Services\\AddressFormatter\\": "app/Services/AddressFormatter/"
         }
     },
     "autoload-dev": {

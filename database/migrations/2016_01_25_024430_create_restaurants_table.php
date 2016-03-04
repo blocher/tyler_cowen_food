@@ -15,18 +15,21 @@ class CreateRestaurantsTable extends Migration
         Schema::create('restaurants', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('name');
-            $table->string('permalink');
-            $table->string('raw_address');
-            $table->string('street');
-            $table->string('city');
-            $table->string('state');
-            $table->string('zip');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('phone');
-            $table->text('description');
-            $table->text('description_plaintext');
+            $table->string('name')->nullable();
+            $table->string('permalink')->nullable();
+            $table->string('raw_address')->nullable();
+            $table->string('formatted_address')->nullable();
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->text('description')->nullable();
+            $table->text('description_plaintext')->nullable();
+            $table->boolean('not_actual_restaurant');
             $table->timestamp('date_added');
 
         });
