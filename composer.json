@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
  	    "sunra/php-simple-html-dom-parser": "v1.5.0",
-        "stanley/geocodio-php": "~1.0"
+        "stanley/geocodio-php": "~1.0",
+        "alexpechkarev/google-geocoder": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

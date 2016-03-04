@@ -156,8 +156,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Providers\AddressFormatterProvider::class,
+
         Laracasts\Generators\GeneratorsServiceProvider::class,
         Stanley\Geocodio\ServiceProviders\LaravelServiceProvider::class,
+
+        Alexpechkarev\GoogleGeocoder\GoogleGeocoderServiceProvider::class,
 
     ],
 
@@ -206,6 +210,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         'Geocodio' => Stanley\Geocodio\Geocodio::class,
+
 
     ],
 

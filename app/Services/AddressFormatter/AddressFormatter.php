@@ -2,7 +2,7 @@
 
 interface AddressFormatter
 {
-    public function __construct($address);
+    public function init($raw_address);
     public function getRawAddress();
     public function getFormattedAddress();
     public function getStreet();

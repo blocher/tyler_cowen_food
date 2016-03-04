@@ -4,9 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7875c520d11745eae8067d011d1c1382",
-    "content-hash": "5427d9d5d1d8d9664c9e6a476dbf717d",
+    "hash": "5afd82cecc2ff82bf15e6e12c807ca3e",
+    "content-hash": "fbf5a93743addf3715b3fe958e696b5a",
     "packages": [
+        {
+            "name": "alexpechkarev/google-geocoder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alexpechkarev/google-geocoder.git",
+                "reference": "3503c310ab5b51895013440042a8e7c52dc752d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alexpechkarev/google-geocoder/zipball/3503c310ab5b51895013440042a8e7c52dc752d3",
+                "reference": "3503c310ab5b51895013440042a8e7c52dc752d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Alexpechkarev\\GoogleGeocoder": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Pechkarev",
+                    "email": "alexpechkarev@gmail.com"
+                }
+            ],
+            "description": "Simple Google Geocoding API v3 wrapper for Laravel 4",
+            "homepage": "https://github.com/alexpechkarev/google-geocoder",
+            "keywords": [
+                "geocoding",
+                "google geocoding api",
+                "laravel"
+            ],
+            "time": "2015-09-14 18:42:18"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "3.0.0",
@@ -3332,7 +3377,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "alexpechkarev/google-geocoder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

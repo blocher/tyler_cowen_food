@@ -6,7 +6,7 @@ class  GeocodioAddressFormatter implements AddressFormatter
     private $query;
     private $lookup = false;
 
-    public function __construct($address) {
+    public function init($address) {
         $this->raw_address = $address;
         try {
             $query = \Geocodio::get($address, config('geocodio.api_key'));
