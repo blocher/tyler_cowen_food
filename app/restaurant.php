@@ -33,6 +33,31 @@ class Restaurant extends Model
 
   }
 
-  //TODO: Add scope to limit to actual restaurants
+  public function scopeActual($query)
+  {
+      return $query->where('not_actual_restaurant', 0);
+  }
+
+  public function getExcerptAttribute() {
+
+    $description = $this->description;
+    $description = strip_tags($description);
+    preg_match('/(])(.*)(Related Posts)/',$description,$matches);
+
+    if (!count($matches)) {
+      return $description;
+    }
+
+    $description = $matches[2];
+    $description = html_entity_decode(trim($description));
+    return $description;
+
+  }
+
+  public function getFormattedAddressAttribute() {
+
+    return str_replace(', USA','',$this->attributes['formatted_address']);
+
+  }
 
 }

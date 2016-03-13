@@ -12,7 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $restaurants = \App\Restaurant::actual()->orderBy('name','ASC')->get();
+    $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
+    return view('index')->with(compact('restaurants', 'cuisines'));
 });
 
 /*

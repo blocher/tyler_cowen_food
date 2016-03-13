@@ -13,4 +13,20 @@ class term extends Model
   {
       return $this->belongsToMany('App\Restaurant');
   }
+
+  public function scopeCategories($query)
+  {
+    return $query->where('type', 'category');
+  }
+
+  public function scopeTags($query)
+  {
+    return $query->where('type', 'tag');
+  }
+
+  public function scopeCuisines($query)
+  {
+    return $query->where('type', 'category')->where('subtype','cuisine');
+  }
+
 }

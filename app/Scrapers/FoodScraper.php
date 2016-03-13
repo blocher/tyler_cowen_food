@@ -15,7 +15,7 @@ class FoodScraper {
 		return html_entity_decode($this->dom->find('.entry-title',0)->innertext);
 	}
 
-	private function scrapeAddress() {
+	private function scrapeAddress($raw_address=null) {
 
 		$possible_addresses = $this->dom->find('.entry-content a');
 		foreach ($possible_addresses as $possible_address) {
@@ -24,6 +24,11 @@ class FoodScraper {
 				break;
 			}
 		}
+
+		if ($raw_address) {
+			return $raw_address;
+		}
+
 		return null;
 
 	}
@@ -109,6 +114,20 @@ class FoodScraper {
 
 	}
 
+	private function getExcerpt() {
+		$description = $this->scrapeDescription();
+		$description = strip_tags($description);
+		preg_match('/(])(.*)(Related Posts)/',$description,$matches);
+
+		if (!count($matches)) {
+			return $description;
+		}
+
+		$description = $matches[2];
+		$description = html_entity_decode(trim($description));
+		return $description;
+	}
+
 	public function go() {
 		$str = $this->scraper->get('https://tylercowensethnicdiningguide.com/');
 		$this->dom = HtmlDomParser::str_get_html( $str );
@@ -122,11 +141,13 @@ class FoodScraper {
 			$restaurant = \App\Restaurant::firstOrNew(['permalink' => $permalink]);
 
 			$restaurant->name = $this->scrapeName();
-			$restaurant->raw_address = $this->scrapeAddress();
+			$restaurant->raw_address = $this->scrapeAddress($restaurant->raw_address);
 			$restaurant->description = $this->scrapeDescription();
 			$restaurant->description_plaintext = $this->scrapeDescriptionPlainText();
 			$restaurant->phone = $this->scrapePhone();
 			$restaurant->website = $this->scrapeWebsite();
+
+			echo PHP_EOL . $this->getExcerpt() . PHP_EOL;
 
 			//TODO: Attemp to extract reviews
 			//TODO: Scrape Date Added
