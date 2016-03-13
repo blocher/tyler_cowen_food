@@ -162,6 +162,7 @@ return [
         Stanley\Geocodio\ServiceProviders\LaravelServiceProvider::class,
 
         Alexpechkarev\GoogleGeocoder\GoogleGeocoderServiceProvider::class,
+        Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 
     ],
 
@@ -210,6 +211,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         'Geocodio' => Stanley\Geocodio\Geocodio::class,
+        'FormBuilder' => Kris\LaravelFormBuilder\Facades\FormBuilder::class,
 
 
     ],

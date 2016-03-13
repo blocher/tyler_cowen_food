@@ -19,9 +19,9 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css" crossorigin="anonymous">
-
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 
 
     <!-- Custom styles for this template -->
@@ -81,49 +81,27 @@
       </div>
 
       <div class="row">
-        <div class="col-md-9">
-        <div class="list-group">
-          @foreach ($restaurants as $restaurant)
+        <div class="col-md-9 restaurant-group">
 
-<!--              <a href="{{ $restaurant->permalink }}" class="list-group-item">
-              <h4 class="list-group-item-heading"></h4>
-              <p class="list-group-item-text"></p>
-            </a> -->
-
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">
-                  {{ $restaurant->name }}
-                    <div class="cuisine-badges pull-right">
-                      @foreach ($restaurant->terms()->cuisines()->get() as $cuisine)
-                          <span class="badge">{{ $cuisine->title }}</span>
-                      @endforeach
-                    </div>
-                </h3>
-              </div>
-              <div class="panel-body">
-                {{ $restaurant->excerpt }}
-              </div>
-              <div class="panel-footer">
-                  <a href="https://www.google.com/maps/place/{{ $restaurant->formatted_address }}" target="_blank"><i class="fa fa-map-marker"></i>&nbsp;{{ $restaurant->formatted_address }}</a><span class="pull-right"><a href="{{ $restaurant->permalink }}" target="_blank"><i class="fa fa-external-link"></i></a></span>
-              </div>
-            </div>
-          @endforeach
-
-
-        </div>
-
+          @include('partials.restaurant_group')
 
         </div>
         <div class="col-md-3">
           <h3>Sidebar</h3>
-          <form>
-            @foreach ($cuisines as $cuisine)
-              <div class="checkbox" style="width:100%">
-                <input data-size="mini" checked=true type="checkbox" name="cuisine" data-label-text="{{ $cuisine->title }}" value="{{ $cuisine->id }}">
-              </div>
-            @endforeach
-          </form>
+          {!! Form::open() !!}
+            <div class="cuisine-filters">
+               <div class="form-group">
+                 <button type="button" class="btn btn-success toggle-cuisines toggle-cuisines-on">Toggle All On</button>
+                 <button type="button" class="btn btn-danger toggle-cuisines toggle-cuisines-off">Toggle All Off</button>
+               </div>
+
+               @foreach ($cuisines as $cuisine)
+                <div class="form-group">
+                  <input checked data-toggle="toggle" data-on="<i class='fa fa-check-circle'></i> {{ $cuisine->title }}" data-off="<i class='fa fa-minus-circle'></i> {{ $cuisine->title }}" data-width="75%" data-size="small" type="checkbox" class="cuisine-filter-button" name="cuisine-filter[]" value="{{ $cuisine->id }}">
+                </div>
+              @endforeach
+            </div>
+             {!! Form::close() !!}
 
         </div>
       </div>
@@ -141,10 +119,51 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js" crossorigin="anonymous"></script>
-
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
     <script>
-        $("[name='cuisine']").bootstrapSwitch();
+
+        $( document ).ready(function() {
+
+          var updatable = true;
+
+          $('.toggle-cuisines-on').click(function() {
+            updatable = false;
+            $('.cuisine-filter-button').prop( "checked", true );
+            $('.cuisine-filter-button').bootstrapToggle('on');
+            updatable = true;
+            updateRestaurants();
+          });
+
+          $('.toggle-cuisines-off').click(function() {
+            updatable = false;
+            $('.cuisine-filter-button').prop( "checked", false );
+            $('.cuisine-filter-button').bootstrapToggle('off');
+            updatable = true;
+            updateRestaurants();
+          });
+
+
+          $('.cuisine-filter-button').change(function() {
+            updateRestaurants();
+          });
+
+
+          function updateRestaurants() {
+
+            if (updatable==false) {
+              return;
+            }
+            $( '.restaurant-group' ).html('<i class="fa-li fa fa-spinner fa-spin"></i>');
+            var cuisine_filter = $('.cuisine-filter-button:checked').map(function() {
+                return this.value;
+            }).get();
+            cuisine_filter = JSON.stringify(cuisine_filter);
+            $.get("/api/restaurants?cuisine_filter=" + cuisine_filter, function(data, status){
+                $( '.restaurant-group' ).html(data);
+            });
+          }
+        });
+
     </script>
 
   </body>

@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
  	    "sunra/php-simple-html-dom-parser": "v1.5.0",
         "stanley/geocodio-php": "~1.0",
-        "alexpechkarev/google-geocoder": "dev-master"
+        "alexpechkarev/google-geocoder": "dev-master",
+        "kris/laravel-form-builder": "1.6.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
