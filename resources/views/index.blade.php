@@ -83,21 +83,65 @@
       <div class="row">
         <div class="col-md-9 restaurant-group">
 
-          @include('partials.restaurant_group')
+
 
         </div>
+        {{-- Sidebar --}}
         <div class="col-md-3">
-          <h3>Sidebar</h3>
+
+
           {!! Form::open() !!}
+            <h3>Sorting</h3>
+            <div class="sorting">
+              <div class="form-group">
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-warning active">Alphabetically</button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">By Distance</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Enter your address or click to determine current location</h4>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h3>Filters</h3>
             <div class="cuisine-filters">
-               <div class="form-group">
-                 <button type="button" class="btn btn-success toggle-cuisines toggle-cuisines-on">Toggle All On</button>
-                 <button type="button" class="btn btn-danger toggle-cuisines toggle-cuisines-off">Toggle All Off</button>
-               </div>
+
+
+                <div class="form-group">
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success toggle-cuisines toggle-cuisines-on">Toggle On</button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-danger toggle-cuisines toggle-cuisines-off">Toggle Off</button>
+                  </div>
+                </div>
+              </div>
 
                @foreach ($cuisines as $cuisine)
                 <div class="form-group">
-                  <input checked data-toggle="toggle" data-on="<i class='fa fa-check-circle'></i> {{ $cuisine->title }}" data-off="<i class='fa fa-minus-circle'></i> {{ $cuisine->title }}" data-width="75%" data-size="small" type="checkbox" class="cuisine-filter-button" name="cuisine-filter[]" value="{{ $cuisine->id }}">
+                  <input checked data-toggle="toggle" data-on="<i class='fa fa-check-circle'></i> {{ $cuisine->title }}" data-off="<i class='fa fa-minus-circle'></i> {{ $cuisine->title }}" data-width="100%" data-size="small" type="checkbox" class="cuisine-filter-button" name="cuisine-filter[]" value="{{ $cuisine->id }}">
                 </div>
               @endforeach
             </div>
@@ -122,9 +166,9 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
     <script>
 
-        $( document ).ready(function() {
+        var updatable = true;
 
-          var updatable = true;
+        $( document ).ready(function() {
 
           $('.toggle-cuisines-on').click(function() {
             updatable = false;
@@ -147,22 +191,25 @@
             updateRestaurants();
           });
 
+          updateRestaurants();
 
-          function updateRestaurants() {
 
-            if (updatable==false) {
-              return;
-            }
-            $( '.restaurant-group' ).html('<i class="fa-li fa fa-spinner fa-spin"></i>');
-            var cuisine_filter = $('.cuisine-filter-button:checked').map(function() {
-                return this.value;
-            }).get();
-            cuisine_filter = JSON.stringify(cuisine_filter);
-            $.get("/api/restaurants?cuisine_filter=" + cuisine_filter, function(data, status){
-                $( '.restaurant-group' ).html(data);
-            });
-          }
         });
+
+        function updateRestaurants() {
+
+          if (updatable==false) {
+            return;
+          }
+          $( '.restaurant-group' ).html('<i class="fa-li fa fa-spinner fa-spin"></i>');
+          var cuisine_filter = $('.cuisine-filter-button:checked').map(function() {
+              return this.value;
+          }).get();
+          cuisine_filter = JSON.stringify(cuisine_filter);
+          $.get("/api/restaurants?cuisine_filter=" + cuisine_filter, function(data, status){
+              $( '.restaurant-group' ).html(data);
+          });
+        }
 
     </script>
 

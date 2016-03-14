@@ -1,5 +1,5 @@
 <div class="list-group">
-  @foreach ($restaurants as $restaurant)
+  @forelse ($restaurants as $restaurant)
 
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -16,10 +16,15 @@
         {{ $restaurant->excerpt }}
       </div>
       <div class="panel-footer">
+          @if ($restaurant->distance_in_miles)
+            <strong>Approximately {{ $restaurant->distance_in_miles }} miles away</strong>&nbsp;
+          @endif
           <a href="https://www.google.com/maps/place/{{ $restaurant->formatted_address }}" target="_blank"><i class="fa fa-map-marker"></i>&nbsp;{{ $restaurant->formatted_address }}</a><span class="pull-right"><a href="{{ $restaurant->permalink }}" target="_blank"><i class="fa fa-external-link"></i></a></span>
       </div>
     </div>
-  @endforeach
+  @empty
+    <h3>There are no results found for your current filters.  Please adjust the filters.</h3>
+  @endforelse
 
 
 </div>

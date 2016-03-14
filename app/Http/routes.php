@@ -13,9 +13,8 @@
 use Request;
 
 Route::get('/', function () {
-    $restaurants = \App\Restaurant::actual()->orderBy('name','ASC')->get();
     $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
-    return view('index')->with(compact('restaurants', 'cuisines'));
+    return view('index')->with(compact('cuisines'));
 });
 
 Route::post('/', function () {
@@ -31,9 +30,19 @@ Route::get('/api/restaurants', function() {
 
   $cuisine_filter = Request::input('cuisine_filter');
   $cuisine_filter = json_decode($cuisine_filter);
-  $restaurants = \App\Restaurant::actual()->orderBy('name','ASC')->whereHas('terms', function ($query) use ($cuisine_filter) {
+  $restaurants = \App\Restaurant::actual()/*->orderBy('name','ASC')*/->whereHas('terms', function ($query) use ($cuisine_filter) {
       $query->whereIN('id', $cuisine_filter);
-  })->get();
+  })
+  ->nearby('38.813832399999995','-77.1096706')
+  ->get();
+  $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
+  return view('partials.restaurant_group')->with(compact('restaurants', 'cuisines'));
+});
+
+Route::get('/api/nearby', function() {
+
+  $restaurants = \App\Restaurant::getNearby();
+  return $restaurants;
   $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
   return view('partials.restaurant_group')->with(compact('restaurants', 'cuisines'));
 });
