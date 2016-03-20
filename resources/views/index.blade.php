@@ -147,11 +147,6 @@
               {{ Form::select('cuisine-filter-select[]', $cuisines, array_keys($cuisines->toArray()), ['id'=>'cuisine-filter-select', 'class'=>'form-control', 'multiple'=>true]) }}
               </div>
 
-{{--                @foreach ($cuisines as $cuisine)
-                <div class="form-group">
-                  <input checked data-toggle="toggle" data-on="<i class='fa fa-check-circle'></i> {{ $cuisine->title }}" data-off="<i class='fa fa-minus-circle'></i> {{ $cuisine->title }}" data-width="100%" data-size="small" type="checkbox" class="cuisine-filter-button" name="cuisine-filter[]" value="{{ $cuisine->id }}">
-                </div>
-              @endforeach --}}
             </div>
              {!! Form::close() !!}
 

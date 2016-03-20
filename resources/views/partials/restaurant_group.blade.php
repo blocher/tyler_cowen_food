@@ -13,12 +13,18 @@
         </h3>
       </div>
       <div class="panel-body">
+        @if ($restaurant->added_on)
+             <div class="cuisine-badges pull-right">
+              <span class="badge">{{ $restaurant->added_on->format('F j, Y') }}</span>
+            </div>
+        @endif
         {{ $restaurant->excerpt }}
       </div>
       <div class="panel-footer">
           @if ($restaurant->distance_in_miles)
             <strong>Approximately {{ $restaurant->distance_in_miles }} miles away</strong>&nbsp;
           @endif
+
           <a href="https://www.google.com/maps/place/{{ $restaurant->formatted_address }}" target="_blank"><i class="fa fa-map-marker"></i>&nbsp;{{ $restaurant->formatted_address }}</a><span class="pull-right"><a href="{{ $restaurant->permalink }}" target="_blank"><i class="fa fa-external-link"></i></a></span>
       </div>
     </div>
