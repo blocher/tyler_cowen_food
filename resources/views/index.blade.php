@@ -23,6 +23,8 @@
 
      <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
+
 
     <!-- Custom styles for this template -->
     <link href="css/theme.css" rel="stylesheet">
@@ -80,11 +82,12 @@
         <p>This is ripping of Tyler's excellent reviews, but making them marginally more searchable.</p>
       </div>
 
-      <div class="row">
-        <div class="col-md-9 restaurant-group">
 
 
-
+        <div class="col-md-9">
+          <!-- <h3 class='current-cuisines-label'>All cuisines</h3> -->
+          <div class = "restaurant-group">
+          </div>
         </div>
         {{-- Sidebar --}}
         <div class="col-md-3">
@@ -124,26 +127,31 @@
               </div>
             </div>
 
-            <h3>Filters</h3>
+            <h3>Filter by Cuisine</h3>
             <div class="cuisine-filters">
 
 
                 <div class="form-group">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success toggle-cuisines toggle-cuisines-on">Toggle On</button>
+                    <button type="button" class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
                   </div>
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-danger toggle-cuisines toggle-cuisines-off">Toggle Off</button>
+                    <button type="button" class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
                   </div>
                 </div>
               </div>
 
-               @foreach ($cuisines as $cuisine)
+              <div class="form-group">
+
+              {{ Form::select('cuisine-filter-select[]', $cuisines, array_keys($cuisines->toArray()), ['id'=>'cuisine-filter-select', 'class'=>'form-control', 'multiple'=>true]) }}
+              </div>
+
+{{--                @foreach ($cuisines as $cuisine)
                 <div class="form-group">
                   <input checked data-toggle="toggle" data-on="<i class='fa fa-check-circle'></i> {{ $cuisine->title }}" data-off="<i class='fa fa-minus-circle'></i> {{ $cuisine->title }}" data-width="100%" data-size="small" type="checkbox" class="cuisine-filter-button" name="cuisine-filter[]" value="{{ $cuisine->id }}">
                 </div>
-              @endforeach
+              @endforeach --}}
             </div>
              {!! Form::close() !!}
 
@@ -160,6 +168,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
@@ -170,24 +179,22 @@
 
         $( document ).ready(function() {
 
+          $('#cuisine-filter-select').select2({
+            placeholder: 'Select cuisines'
+          });
+
           $('.toggle-cuisines-on').click(function() {
-            updatable = false;
-            $('.cuisine-filter-button').prop( "checked", true );
-            $('.cuisine-filter-button').bootstrapToggle('on');
-            updatable = true;
+            $('#cuisine-filter-select option').prop('selected', true).trigger('change.select2');
             updateRestaurants();
           });
 
           $('.toggle-cuisines-off').click(function() {
-            updatable = false;
-            $('.cuisine-filter-button').prop( "checked", false );
-            $('.cuisine-filter-button').bootstrapToggle('off');
-            updatable = true;
+            $('#cuisine-filter-select option').prop('selected', false).trigger('change.select2');
             updateRestaurants();
           });
 
 
-          $('.cuisine-filter-button').change(function() {
+          $('#cuisine-filter-select').change(function() {
             updateRestaurants();
           });
 
@@ -198,16 +205,15 @@
 
         function updateRestaurants() {
 
-          if (updatable==false) {
-            return;
-          }
           $( '.restaurant-group' ).html('<i class="fa-li fa fa-spinner fa-spin"></i>');
-          var cuisine_filter = $('.cuisine-filter-button:checked').map(function() {
-              return this.value;
-          }).get();
-          cuisine_filter = JSON.stringify(cuisine_filter);
-          $.get("/api/restaurants?cuisine_filter=" + cuisine_filter, function(data, status){
+          var selected = $('#cuisine-filter-select').val();
+          $.get("/api/restaurants?cuisine_filter=" + JSON.stringify(selected), function(data, status){
               $( '.restaurant-group' ).html(data);
+              // if (selected!==null) {
+              //   $('.current-cuisines-label').html('Filtered cuisines'selected.join(', '));
+              // } else {
+              //   $('.current-cuisines-label').html('All cuisines');
+              // }
           });
         }
 
