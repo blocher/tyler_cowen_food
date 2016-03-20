@@ -132,20 +132,25 @@ class FoodScraper {
 	}
 
 	private function getAddedOn() {
-		$content = $this->dom->find('.entry-date',0)->plaintext;
-		return Carbon::parse($content, 'America/New_York')->format("Y-m-d H:i:s");
+
+		$content = $this->dom->find('.entry-date',0);
+		if (!is_object($content)) {
+			return null;
+		}
+		$date = $content->plaintext;
+		return Carbon::parse($date, 'America/New_York')->format("Y-m-d H:i:s");
 	}
 
 	private function getLinks() {
 
 		$links = [];
-		$dom = HtmlDomParser::str_get_html ($this->scraper->get('https://tylercowensethnicdiningguide.com/'));
-		$links = array_merge($links,$dom->find('h2.entry-title a'));
+		$this->dom = HtmlDomParser::str_get_html ($this->scraper->get('https://tylercowensethnicdiningguide.com/'));
+		$links = array_merge($links,$this->dom->find('h2.entry-title a'));
 		$i=0;
-		while ($nextlink = $dom->find('.nav-previous a', 0)) {
+		while ($nextlink = $this->dom->find('.nav-previous a', 0)) {
 			$i++;
-			$dom = HtmlDomParser::str_get_html ($this->scraper->get($nextlink->href));
-			$links = array_merge($links,$dom->find('h2.entry-title a'));
+			$this->dom = HtmlDomParser::str_get_html ($this->scraper->get($nextlink->href));
+			$links = array_merge($links,$this->dom->find('h2.entry-title a'));
 			// if ($i>=2) {
 			// 	break;
 			// }
@@ -154,7 +159,7 @@ class FoodScraper {
 		foreach ($links as &$link) {
 			$link = $link->href;
 		}
-
+		$this->dom->clear();
 		return $links;
 
 	}
