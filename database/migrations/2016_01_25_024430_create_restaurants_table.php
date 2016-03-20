@@ -28,9 +28,9 @@ class CreateRestaurantsTable extends Migration
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
             $table->text('description')->nullable();
-            $table->text('description_plaintext')->nullable();
+            $table->text('excerpt')->nullable();
+            $table->dateTime('added_on')->nullable();
             $table->boolean('not_actual_restaurant');
-            $table->timestamp('date_added');
 
         });
     }

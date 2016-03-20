@@ -11,9 +11,9 @@ use Services\AddressFormatter;
 class Restaurant extends Model
 {
 
-	protected $fillable = ['name', 'permalink', 'raw_address', 'street', 'city', 'state', 'zip', 'city', 'latitude', 'longitude', 'phone', 'description', 'description_plaintext', 'date_added'];
+	protected $fillable = ['name', 'permalink', 'raw_address', 'street', 'city', 'state', 'zip', 'city', 'latitude', 'longitude', 'phone', 'description', 'description_plaintext', 'added_on'];
 
-  protected $data = ['date_added'];
+  protected $dates = ['added_on'];
 
   public function terms()
   {

@@ -1,6 +1,7 @@
 <?php namespace App\Scrapers;
 
 use Sunra\PhpSimple\HtmlDomParser;
+use Carbon\Carbon;
 
 class FoodScraper {
 
@@ -36,12 +37,6 @@ class FoodScraper {
 	private function scrapeDescription() {
 
 		return trim($this->dom->find('.entry-content',0)->innertext);
-
-	}
-
-	private function scrapeDescriptionPlainText() {
-
-		return trim($this->dom->find('.entry-content',0)->plaintext);
 
 	}
 
@@ -92,11 +87,19 @@ class FoodScraper {
 	}
 
 	private function scrapeCategories($restaurant) {
+			$cuisines = ['Afghan','African','American','Argentinean','Asian (Pan-Asian)','Bakery','Bangladeshi','Barbecue','Bars','Bolivian','Butcher','Cajun','Cambodian','Cantonese','Chicken','Chinese','Chinese-Peruvian','Crabs','Cuban','Deli','Desserts','Eritrean','Ethiopian','Filipino','Fine Dining','Food Stores','Food Trucks/Street Vendors','Franco-Mediterranean','French','Greek','Hamburgers','Hmong','Indian','Indonesian','Iranian','Israeli','Italian','Japanese','Korean','Laotian','Lebanese','Malaysian','Manchurian','Mexican','Moroccan','Nepalese','Nigerian','Pakistani','Palestinian','Persian','Peruvian','Pizza','Puerto Rican','Russian','Saudi Arabian','Seafood','Singaporean','Southern (see also Barbecue)','Southern Indian','Spanish','Sri Lankan','Steaks','Sushi','Taiwanese','Thai','Turkish','Uruguayan','Uyghur','Uzbekistani','Vegetarian','Venezuelan','Vietnamese','West African','Yemeni'];
+
+			$locations = ['Adams Morgan/Mount Pleasant','Alexandria','Annandale','Arlington','Bailey\'s Crossroads','Bethesda/Chevy Chase','Bloomingdale','California','Capitol Hill/Union Station','Centreville/Manassas','Chicago','Chinatown/Verizon Center','College Park/Hyattsville','Columbia Heights/Howard University','Columbia/Laurel','Convention Center','Croatia','Crystal City/Pentagon City/National Airport','DC','Downtown','Dupont Circle','Eden Center','Fairfax','Falls Church/Seven Corners','Fredericksburg','Georgetown','GWU/Foggy Bottom','H Street NE','Herndon/Reston/Ashburn/Chantilly / Dulles Airport','Illinois','Logan Circle','Maryland','Merrifield','New York','Northeast','Outside DC','Rockville/Gaithersburg','Silver Spring','Singapore','Southeast','Springfield','Tenleytown/Van Ness','Texas','U Street','Union Market / Gallaudet University','Vienna/Tysons','Virginia','Wheaton/Kensington','Woodbridge/Potomac Mills'];
+
 			$possible_categories = $this->dom->find('.entry-utility a[rel^=category]');
 			$categories = [];
 			foreach ($possible_categories as $possible_category) {
 				$categories[] = $possible_category->innertext;
-				$category = \App\Term::updateOrCreate(['title'=>$possible_category->innertext,'type'=>'category']);
+
+				$subtype = in_array($possible_category->innertext,$locations) ? 'location' : '';
+				$subtype = in_array($possible_category->innertext,$cuisines) ? 'cuisine' : $subtype;
+
+				$category = \App\Term::updateOrCreate(['title'=>$possible_category->innertext,'type'=>'category','subtype'=>$subtype]);
 				if (!$restaurant->terms->contains($category->id))
 				{
 				   $restaurant->terms()->attach($category->id);
@@ -128,26 +131,50 @@ class FoodScraper {
 		return $description;
 	}
 
+	private function getAddedOn() {
+		$content = $this->dom->find('.entry-date',0)->plaintext;
+		return Carbon::parse($content, 'America/New_York')->format("Y-m-d H:i:s");
+	}
+
+	private function getLinks() {
+
+		$links = [];
+		$dom = HtmlDomParser::str_get_html ($this->scraper->get('https://tylercowensethnicdiningguide.com/'));
+		$links = array_merge($links,$dom->find('h2.entry-title a'));
+		$i=0;
+		while ($nextlink = $dom->find('.nav-previous a', 0)) {
+			$i++;
+			$dom = HtmlDomParser::str_get_html ($this->scraper->get($nextlink->href));
+			$links = array_merge($links,$dom->find('h2.entry-title a'));
+			// if ($i>=2) {
+			// 	break;
+			// }
+		}
+
+		foreach ($links as &$link) {
+			$link = $link->href;
+		}
+
+		return $links;
+
+	}
 	public function go() {
-		$str = $this->scraper->get('https://tylercowensethnicdiningguide.com/');
-		$this->dom = HtmlDomParser::str_get_html( $str );
-		$nextlink = $this->dom->find('h2.entry-title a', 0)->href;
-		do {
 
-			$str = $this->scraper->get($nextlink);
-			$this->dom = HtmlDomParser::str_get_html( $str );
+		$links = $this->getLinks();
+		foreach ($links as $link) {
 
-			$permalink = $this->scrapePermalink($nextlink);
+			$this->dom = HtmlDomParser::str_get_html( $this->scraper->get($link) );
+
+			$permalink = $this->scrapePermalink($link);
 			$restaurant = \App\Restaurant::firstOrNew(['permalink' => $permalink]);
 
 			$restaurant->name = $this->scrapeName();
 			$restaurant->raw_address = $this->scrapeAddress($restaurant->raw_address);
 			$restaurant->description = $this->scrapeDescription();
-			$restaurant->description_plaintext = $this->scrapeDescriptionPlainText();
 			$restaurant->phone = $this->scrapePhone();
 			$restaurant->website = $this->scrapeWebsite();
-
-			echo PHP_EOL . $this->getExcerpt() . PHP_EOL;
+			$restaurant->excerpt = $this->getExcerpt();
+			$restaurant->added_on = $this->getAddedOn();
 
 			//TODO: Attemp to extract reviews
 			//TODO: Scrape Date Added
@@ -165,7 +192,7 @@ class FoodScraper {
 			$nextlink = $this->getNextLink();
 
 			$this->dom->clear();
-		} while ($nextlink);
+		}
 
 	}
 
