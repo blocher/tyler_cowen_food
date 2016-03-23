@@ -1,6 +1,5 @@
-<div class="list-group">
-  @forelse ($restaurants as $restaurant)
 
+  @forelse ($restaurants as $restaurant)
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -31,6 +30,3 @@
   @empty
     <h3>There are no results found for your current filters.  Please adjust the filters.</h3>
   @endforelse
-
-
-</div>

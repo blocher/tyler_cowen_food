@@ -99,29 +99,33 @@
               <div class="form-group">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-warning active">Alphabetically</button>
+                    <button type="button" class="btn btn-warning btn-sort btn-sort-alphabetic active" data-sort="alphabetic">ABC</button>
                   </div>
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">By Distance</button>
+                    <button type="button" class="btn btn-success btn-sort btn-sort-distance"  data-sort="distance" data-toggle="modal" data-target="#distance_modal">Distance</button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary btn-sort btn-sort-date"  data-sort="data">Date</button>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade" id="distance_modal" tabindex="-1" role="dialog" aria-labelledby="distance_modalLabel">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Enter your address or click to determine current location</h4>
+                    <h4 class="modal-title" id="distance_modalLabel">Enter your address or click to determine current location</h4>
                   </div>
                   <div class="modal-body">
-                    ...
+
+                  <button type="button" class="btn btn-primary btn-current-location"><i class="fa fa-crosshairs fa-2x" data-dismiss="modal"></i> Use current location</button>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+
                   </div>
                 </div>
               </div>
@@ -134,10 +138,10 @@
                 <div class="form-group">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
+                    <button type="button" data-toggle='on' class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
                   </div>
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
+                    <button type="button" data-toggle='off'  class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
                   </div>
                 </div>
               </div>
@@ -167,52 +171,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
-    <script>
+    <script src="/js/location_tools.js"></script>
+    <script src="/js/app.js"></script>
 
-        var updatable = true;
-
-        $( document ).ready(function() {
-
-          $('#cuisine-filter-select').select2({
-            placeholder: 'Select cuisines'
-          });
-
-          $('.toggle-cuisines-on').click(function() {
-            $('#cuisine-filter-select option').prop('selected', true).trigger('change.select2');
-            updateRestaurants();
-          });
-
-          $('.toggle-cuisines-off').click(function() {
-            $('#cuisine-filter-select option').prop('selected', false).trigger('change.select2');
-            updateRestaurants();
-          });
-
-
-          $('#cuisine-filter-select').change(function() {
-            updateRestaurants();
-          });
-
-          updateRestaurants();
-
-
-        });
-
-        function updateRestaurants() {
-
-          $( '.restaurant-group' ).html('<i class="fa-li fa fa-spinner fa-spin"></i>');
-          var selected = $('#cuisine-filter-select').val();
-          $.get("/api/restaurants?cuisine_filter=" + JSON.stringify(selected), function(data, status){
-              $( '.restaurant-group' ).html(data);
-              // if (selected!==null) {
-              //   $('.current-cuisines-label').html('Filtered cuisines'selected.join(', '));
-              // } else {
-              //   $('.current-cuisines-label').html('All cuisines');
-              // }
-          });
-        }
-
-    </script>
 
   </body>
 </html>

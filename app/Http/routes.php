@@ -17,41 +17,37 @@ Route::get('/', function () {
     return view('index')->with(compact('cuisines'));
 });
 
-Route::post('/', function () {
-    $cuisine_filter = Request::input('cuisine-filter');
-    $restaurants = \App\Restaurant::actual()->orderBy('name','ASC')->whereHas('terms', function ($query) use ($cuisine_filter) {
-        $query->whereIN('id', $cuisine_filter);
-    })->get();
-    $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
-    return view('index')->with(compact('restaurants', 'cuisines'));
-});
-
 Route::get('/api/restaurants', function() {
+
+  $restaurants = \App\Restaurant::actual();
 
   $cuisine_filter = Request::input('cuisine_filter');
   $cuisine_filter = json_decode($cuisine_filter);
-  $restaurants = \App\Restaurant::actual()/*->orderBy('name','ASC')*/;
+  $restaurants = $restaurants->whereHas('terms', function ($query) use ($cuisine_filter) {
+    $query->whereIN('id', $cuisine_filter);
+  });
 
+  $lat = Request::input('lat');
+  $lng = Request::input('lng');
+  $sort = Request::input('sort');
 
-    $restaurants = $restaurants->whereHas('terms', function ($query) use ($cuisine_filter) {
-      $query->whereIN('id', $cuisine_filter);
-    });
+  if (!empty($lat) && !empty($lng)) {
+    $restaurants = $restaurants
+    ->nearby($lat, $lng);
+  } else if ($sort=='date') {
+    $restaurants = $restaurants
+      ->orderBy('added_on','DESC');
+  } else {
+    $restaurants = $restaurants
+      ->orderBy('name','ASC');
+  }
 
-  $restaurants = $restaurants
-    ->nearby('38.813832399999995','-77.1096706')
-    ->get();
+  $restaurants = $restaurants->get();
 
   $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
   return view('partials.restaurant_group')->with(compact('restaurants', 'cuisines'));
 });
 
-Route::get('/api/nearby', function() {
-
-  $restaurants = \App\Restaurant::getNearby();
-  return $restaurants;
-  $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->get();
-  return view('partials.restaurant_group')->with(compact('restaurants', 'cuisines'));
-});
 
 /*
 |--------------------------------------------------------------------------
