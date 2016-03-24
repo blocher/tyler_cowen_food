@@ -10,13 +10,9 @@ var locationTools = (function ($) {
     var setLocation = function(cb) {
 
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(cb);
+            navigator.geolocation.getCurrentPosition(app.receiveLocationCallback);
         }
 
-    }
-
-    var locationCallback = function(cb) {
-        cb()
     }
 
     var getLocation = function() {
