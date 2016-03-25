@@ -21,18 +21,23 @@ var app = (function ($) {
 
     var updateRestaurants = function() {
       addSpinner();
-      var selected = $('#cuisine-filter-select').val();
+
+
 
       var url = '/api/restaurants?';
       if (sort=='distance') {
-         var url = url + '&lat=' + lat;
-         var url = url + '&lng=' + lng;
+        url = url + '&lat=' + lat;
+        url = url + '&lng=' + lng;
       }
 
       if (sort=='date') {
-         var url = url + '&sort=date';
+        url = url + '&sort=date';
       }
-      var url = url + '&cuisine_filter=' + JSON.stringify(selected);
+
+      if ( $("#cuisine-filter-select option:not(:selected)").length > 0 ) {
+        var selected = $('#cuisine-filter-select').val();
+        url = url + '&cuisine_filter=' + JSON.stringify(selected);
+      }
 
       $.get(url, function(data, status){
           $( '.restaurant-group' ).html(data);

@@ -23,9 +23,11 @@ Route::get('/api/restaurants', function() {
 
   $cuisine_filter = Request::input('cuisine_filter');
   $cuisine_filter = json_decode($cuisine_filter);
-  $restaurants = $restaurants->whereHas('terms', function ($query) use ($cuisine_filter) {
-    $query->whereIN('id', $cuisine_filter);
-  });
+  if (is_array($cuisine_filter) && count($cuisine_filter)>0) {
+    $restaurants = $restaurants->whereHas('terms', function ($query) use ($cuisine_filter) {
+      $query->whereIN('id', $cuisine_filter);
+    });
+  }
 
   $lat = Request::input('lat');
   $lng = Request::input('lng');
