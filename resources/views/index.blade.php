@@ -82,80 +82,83 @@
         <p>This is ripping of Tyler's excellent reviews, but making them marginally more searchable.</p>
       </div>
 
+       <div class="row">
+          {{-- Sidebar --}}
+          <div class="col-md-3">
 
 
-        <div class="col-md-9">
-          <!-- <h3 class='current-cuisines-label'>All cuisines</h3> -->
-          <div class = "restaurant-group">
-          </div>
-        </div>
-        {{-- Sidebar --}}
-        <div class="col-md-3">
-
-
-          {!! Form::open() !!}
-            <h3>Sorting</h3>
-            <div class="sorting">
-              <div class="form-group">
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-warning btn-sort btn-sort-alphabetic active" data-sort="alphabetic">ABC</button>
-                  </div>
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success btn-sort btn-sort-distance"  data-sort="distance" data-toggle="modal" data-target="#distance_modal">Distance</button>
-                  </div>
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary btn-sort btn-sort-date"  data-sort="data">Date</button>
+            {!! Form::open() !!}
+              <h3>Sorting</h3>
+              <div class="sorting">
+                <div class="form-group">
+                  <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-warning btn-sort btn-sort-alphabetic active" data-sort="alphabetic">ABC</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-success btn-sort btn-sort-distance"  data-sort="distance" data-toggle="modal" data-target="#distance_modal">Distance</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary btn-sort btn-sort-date"  data-sort="data">Date</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="distance_modal" tabindex="-1" role="dialog" aria-labelledby="distance_modalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="distance_modalLabel">Enter your address or click to determine current location</h4>
-                  </div>
-                  <div class="modal-body">
+              <!-- Modal -->
+              <div class="modal fade" id="distance_modal" tabindex="-1" role="dialog" aria-labelledby="distance_modalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="distance_modalLabel">Enter your address or click to determine current location</h4>
+                    </div>
+                    <div class="modal-body">
 
-                  <button type="button" class="btn btn-primary btn-current-location"><i class="fa fa-crosshairs fa-2x" data-dismiss="modal"></i> Use current location</button>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-current-location"><i class="fa fa-crosshairs fa-2x" data-dismiss="modal"></i> Use current location</button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <h3>Filter by Cuisine</h3>
-            <div class="cuisine-filters">
+              <h3>Filter by Cuisine</h3>
+              <div class="cuisine-filters">
 
+
+                  <div class="form-group">
+                  <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                      <button type="button" data-toggle='on' class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" data-toggle='off'  class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="form-group">
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                  <div class="btn-group" role="group">
-                    <button type="button" data-toggle='on' class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
-                  </div>
-                  <div class="btn-group" role="group">
-                    <button type="button" data-toggle='off'  class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
-                  </div>
+
+                {{ Form::select('cuisine-filter-select[]', $cuisines, array_keys($cuisines->toArray()), ['id'=>'cuisine-filter-select', 'class'=>'form-control', 'multiple'=>true]) }}
                 </div>
+
               </div>
+               {!! Form::close() !!}
 
-              <div class="form-group">
+          </div>
 
-              {{ Form::select('cuisine-filter-select[]', $cuisines, array_keys($cuisines->toArray()), ['id'=>'cuisine-filter-select', 'class'=>'form-control', 'multiple'=>true]) }}
-              </div>
-
+          {{-- Main content area --}}
+          <div class="col-md-9">
+            <!-- <h3 class='current-cuisines-label'>All cuisines</h3> -->
+            <div class = "restaurant-group">
             </div>
-             {!! Form::close() !!}
-
+          </div>
         </div>
-      </div>
+
+      </div> {{-- end row --}}
 
 
 
