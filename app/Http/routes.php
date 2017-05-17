@@ -13,7 +13,7 @@
 //use Request;
 
 Route::get('/', function () {
-    $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->lists('title','id');
+    $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->pluck('title','id');
     return view('index')->with(compact('cuisines'));
 });
 
@@ -63,5 +63,8 @@ Route::get('/api/restaurants', function() {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+   Route::get('/test', function () {
+    $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->pluck('title','id');
+    return view('index')->with(compact('cuisines'));
+});
 });

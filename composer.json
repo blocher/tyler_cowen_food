@@ -6,19 +6,26 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
+        "laravel/framework": "5.4.*",
  	    "sunra/php-simple-html-dom-parser": "v1.5.0",
         "stanley/geocodio-php": "~1.0",
         "alexpechkarev/google-geocoder": "dev-master",
-        "kris/laravel-form-builder": "1.6.*"
+        "kris/laravel-form-builder": "1.10.*",
+        "laravelcollective/html":"^5.4.0",
+        "laravel/cashier": "~7.0",
+        "laravel/passport": "^2.0",
+        "laravel/socialite": "^3.0",
+        "laravel/scout": "^3.0",
+        "laravel/tinker": "^1.0",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*",
-        "laracasts/generators": "^1.1"
+        "phpunit/phpunit": "~5.7",
+        "symfony/css-selector": "3.1.*",
+        "symfony/dom-crawler": "3.1.*",
+        "laracasts/generators": "dev-master"
     },
     "autoload": {
         "classmap": [

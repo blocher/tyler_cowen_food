@@ -58,12 +58,11 @@ var app = (function ($) {
 
     var setupToggleFilters = function() {
         $('.toggle-cuisines').click(function() {
-            var selected = false;
+            var checked = '';
             if ($( this ).data('toggle')=='on' ) {
-                selected = true;
+                checked = 'checked';
             }
-            $('#cuisine-filter-select option').prop('selected', selected).trigger('change.select2');
-            updateRestaurants();
+            $('input[name=cuisine-filter]').prop('checked', checked);
         });
     }
 

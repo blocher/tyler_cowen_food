@@ -125,11 +125,51 @@
                 </div>
               </div>
 
+              <!-- Cuisines Modal -->
+              <div class="modal fade" id="cuisines_modal" tabindex="-1" role="dialog" aria-labelledby="cuisines_modal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="cusisines_modalLabel">
+                        Filter by cuisine
+                        <span class="pull-right">
+                          <div class="btn-group" role="group">
+                            <button type="button" data-toggle='on' class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
+                          </div>
+                          <div class="btn-group" role="group">
+                            <button type="button" data-toggle='off'  class="btn btn-sm btn-danger toggle-cuisines toggle-cuisines-off">Clear</button>
+                          </div>
+                        </span>
+                    </h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        @foreach ($cuisines as $id=>$title)
+                          <div class="col-md-4">
+                            {{ Form::checkbox('cuisine-filter', $id, true) }}
+                            {{ Form::label($id, $title) }}
+                          </div>
+                        @endforeach
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <h3>Filter by Cuisine</h3>
               <div class="cuisine-filters">
 
 
                   <div class="form-group">
+
+                  <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-success btn-sort" data-toggle="modal" data-target="#cuisines_modal">Filter by cuisines</button>
+                  </div>
                   <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group">
                       <button type="button" data-toggle='on' class="btn btn-sm btn-success toggle-cuisines toggle-cuisines-on">Select All</button>
