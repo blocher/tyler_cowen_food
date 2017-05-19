@@ -64,7 +64,12 @@ Route::get('/api/restaurants', function() {
 
 Route::group(['middleware' => ['web']], function () {
    Route::get('/test', function () {
+
     $cuisines = \App\Term::cuisines()->orderBy('title','ASC')->pluck('title','id');
-    return view('test')->with(compact('cuisines'));
+    $restaurants = \App\Restaurant::actual()->orderBy('added_on','DESC')->take(10)->get();
+
+    return view('test')->with(compact('cuisines','restaurants'));
+
+
 });
 });
