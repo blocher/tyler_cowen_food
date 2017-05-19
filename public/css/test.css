@@ -1,0 +1,53 @@
+header {
+  background-image: url(https://blogs-images.forbes.com/netapp/files/2015/04/asia-istock-danielvfung.jpg);
+  background-size: cover;
+  height:100vh;
+
+}
+
+header p {
+  font-size: 3em;
+  color: white;
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  padding: 20px;
+}
+
+header p.small {
+  font-size: 1em;
+  color: white;
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  padding: 10px;
+  text-align: right;
+  display: inline;
+}
+
+.content main {
+  padding: 30px;
+}
+
+.content aside {
+  padding: 60px 30px 30px;
+  background-color: red;
+  min-height: 300px;
+  transition: flex 2s;
+  webkit-transition: flex 2s;
+}
+
+.content aside h3 {
+  font-size: 1.3em;
+}
+
+.content aside .slide-out-arrow {
+  position: absolute;
+  display: block;
+  text-align: center;
+  top: 20px;
+  right: 20px;
+  font-size: 2em;
+  color: white;
+
+}
