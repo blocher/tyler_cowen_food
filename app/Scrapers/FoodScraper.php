@@ -163,6 +163,26 @@ class FoodScraper {
 		return $links;
 
 	}
+
+	public function addGoogleData(&$restaurant) {
+
+		if (!$restaurant->latitude || !$restaurant->longitude) {
+			return;
+		}
+		$url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' . env('GOOGLE_PLACES_API_KEY') . '&location=' . $restaurant->latitude . ',' . $restaurant->longitude . '&radius=400&keyword=' . urlencode($restaurant->name);
+		$content = file_get_contents($url);
+		$content = json_decode($content);
+		if ($content->results[0]) {
+			$google = $content->results[0];
+			$restaurant->google_places_id = $google->id;
+			$restaurant->google_places_photo_id = $google->photos[0]->photo_reference;
+			$restaurant->google_places_photo_url= 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photoreference=' . $google->photos[0]->photo_reference . '&key='  . env('GOOGLE_PLACES_API_KEY');
+			$restaurant->google_places_local_url = '';
+
+
+		}
+	}
+
 	public function go() {
 
 		$links = $this->getLinks();
@@ -180,6 +200,8 @@ class FoodScraper {
 			$restaurant->website = $this->scrapeWebsite();
 			$restaurant->excerpt = $this->getExcerpt();
 			$restaurant->added_on = $this->getAddedOn();
+
+			$this->addGoogleData($restaurant);
 
 			//TODO: Attemp to extract reviews
 			//TODO: Scrape Date Added

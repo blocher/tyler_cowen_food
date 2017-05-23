@@ -27,6 +27,10 @@ class CreateRestaurantsTable extends Migration
             $table->string('longitude')->nullable();
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
+            $table->string('google_places_id')->nullable();
+            $table->string('google_places_photo_id')->nullable();
+            $table->string('google_places_photo_url')->nullable();
+            $table->string('google_places_local_url')->nullable();
             $table->text('description')->nullable();
             $table->text('excerpt')->nullable();
             $table->dateTime('added_on')->nullable();
